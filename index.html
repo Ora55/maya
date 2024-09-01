@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>טיימר וידאו - מצב פורטרט</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 56.25vh; /* יחס גובה-רוחב של 16:9 במצב פורטרט */
+            height: 100vh;
+            max-height: 177.78vw; /* יחס גובה-רוחב של 16:9 במצב פורטרט */
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        #timer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <video id="videoPlayer" controls>
+            <source src="maya.mp4" type="video/mp4">
+            הדפדפן שלך אינו תומך בתג הווידאו.
+        </video>
+        <div id="timer">02:00</div>
+    </div>
+
+    <script>
+        const videoPlayer = document.getElementById('videoPlayer');
+        const timerDisplay = document.getElementById('timer');
+        let timeLeft = 120; // 2 דקות בשניות
+
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft > 0) {
+                timeLeft--;
+                setTimeout(updateTimer, 1000);
+            }
+        }
+
+        videoPlayer.addEventListener('play', function() {
+            if (timeLeft === 120) { // התחל את הטיימר רק אם הוא לא התחיל כבר
+                updateTimer();
+            }
+        });
+
+        videoPlayer.addEventListener('pause', function() {
+            // אל תעצור את הטיימר כשהווידאו מושהה
+        });
+
+        videoPlayer.addEventListener('ended', function() {
+            timerDisplay.textContent = "00:00";
+        });
+    </script>
+</body>
+</html>
